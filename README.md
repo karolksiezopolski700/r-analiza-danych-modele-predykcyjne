@@ -1,4 +1,4 @@
-# Multimodal scRNA-seq Analysis: Protein Abundance Prediction
+# Analiza danych scRNA-seq (projekt studencki)
 
 ## Opis projektu
 Projekt wykonany w ramach studiów dotyczy predykcji poziomu białek powierzchniowych w komórkach szpiku kostnego na podstawie danych RNA z sekwencjonowania pojedynczych komórek (scRNA-seq). Celem projektu jest analiza danych, budowa modeli regresyjnych (ElasticNet, Random Forest) oraz przygotowanie predykcji na zbiorze testowym.
@@ -20,10 +20,8 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 - Testy statystyczne zmiennych
 - Model ElasticNet z walidacją krzyżową
 - Model Random Forest z walidacją krzyżową
-- Porównanie modeli i referencyjny baseline
-- Predykcja na zbiorze testowym
+- Porównanie modeli
+- Predykcja na zbiorze testowym wraz z konkursem w Kaggle
 
-## Wyniki
-- Błąd predykcji (RMSE) został zgłoszony na Kaggle
-- Raport z analizą i wizualizacjami znajduje się w `reports/project_report.pdf`
+
 
