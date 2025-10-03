@@ -5,15 +5,14 @@ Projekt wykonany w ramach studiów dotyczy predykcji poziomu białek powierzchni
 
 ## Dane
 Dane pochodzą z eksperymentów scRNA-seq i zawierają:
-- `X_train.csv` – macierz ekspresji genów dla danych treningowych
-- `X_test.csv` – macierz ekspresji genów dla danych testowych
-- `y_train.csv` – ilość białka powierzchniowego (CD36) dla danych treningowych
+- `X_train.csv` – macierz ekspresji genów dla danych treningowych (zmienne objaśniające)
+- `X_test.csv` – macierz ekspresji genów dla danych testowych (zmienne objaśniające)
+- `y_train.csv` – ilość białka powierzchniowego (CD36) dla danych treningowych (zmienna objaśniana)
 
 ## Struktura repozytorium
-- `notebooks/` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest, predykcji
-- `reports/` – raport PDF z analizą i wnioskami
+- `kod_zad1-5.Rmd`, `kod_zad6.R` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest, predykcji
+- `raport_zad1-5.html`, `raport_zad6.pdf` – raporty z analizą i wnioskami
 - `data/` – przykładowe pliki danych lub link do zewnętrznego źródła
-- `requirements.txt` – biblioteki wymagane do uruchomienia projektu (Python)
 
 ## Modele i analiza
 - Eksploracja danych i wybór zmiennych
@@ -23,5 +22,8 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 - Porównanie modeli
 - Predykcja na zbiorze testowym wraz z konkursem w Kaggle
 
+## Struktura raportów
+- Pierwszy raport jest podzielony według zadań, które dotyczą kolejnych zagadnień
+- Drugi raport dotyczy predykcji wartości zmiennej objaśnianej w zbiorze testowym
 
 
