@@ -27,7 +27,7 @@ Można je pobrać z Google Drive pod tym linkiem: https://drive.google.com/drive
 - Predykcja na zbiorze testowym wraz z konkursem w Kaggle
 
 ## Konkurs Kaggle
-Konkurs Kaggle polegał na uzyskanie jak najniższego błędu średniokwadratowego predykcji. Odbywał się on w obrębie grup laboratoryjnych. Screenshot przedstawia mój wynik w konkursie Kaggle. Dane innych uczestników zostały zamaskowane ze względów prywatności.
+Konkurs Kaggle polegał na uzyskaniu jak najniższego błędu średniokwadratowego predykcji. Odbywał się on w obrębie grup laboratoryjnych. Screenshot przedstawia mój wynik w konkursie Kaggle. Dane innych uczestników zostały zamaskowane ze względów prywatności.
 <img width="811" height="598" alt="kaggle" src="https://github.com/user-attachments/assets/837a09cf-40af-483b-87a7-7d6031d3297c" />
 
 
