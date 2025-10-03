@@ -10,7 +10,7 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 - `y_train.csv` – ilość białka powierzchniowego (CD36) dla danych treningowych (zmienna objaśniana)
 
 Pliki `X_train.csv`, `X_test.csv` i `y_train.csv` nie są dołączone ze względu na rozmiar.
-Można je pobrać z Google Drive pod tym linkiem: (https://drive.google.com/uc?id=<file-id>](https://drive.google.com/drive/u/1/folders/1oI1tylOa8qCDE5pjU7WxEVHE9g32aPyS).
+Można je pobrać z Google Drive pod tym linkiem: https://drive.google.com/drive/u/1/folders/1oI1tylOa8qCDE5pjU7WxEVHE9g32aPyS
 
 ## Struktura repozytorium
 - `kod_zad1-5.Rmd`, `kod_zad6.R` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest, predykcji
