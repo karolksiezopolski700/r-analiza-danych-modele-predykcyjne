@@ -28,6 +28,6 @@ Można je pobrać z Google Drive pod tym linkiem: https://drive.google.com/drive
 
 ## Konkurs Kaggle
 Screenshot przedstawia mój wynik w konkursie Kaggle. Dane innych uczestników zostały zamaskowane ze względów prywatności.
-![Opis obrazka](C:\Users\ACER\Desktop\github\R_projekt\Kaggle.png)
+<img width="811" height="598" alt="kaggle" src="https://github.com/user-attachments/assets/837a09cf-40af-483b-87a7-7d6031d3297c" />
 
 
