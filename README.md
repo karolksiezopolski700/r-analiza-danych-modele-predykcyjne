@@ -13,6 +13,10 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 - `kod_zad1-5.Rmd`, `kod_zad6.R` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest, predykcji
 - `raport_zad1-5.html`, `raport_zad6.pdf` – raporty z analizą i wnioskami
 
+## Struktura raportów
+- Pierwszy raport jest podzielony według zadań, które dotyczą kolejnych zagadnień
+- Drugi raport dotyczy predykcji wartości zmiennej objaśnianej w zbiorze testowym
+
 ## Modele i analiza
 - Eksploracja danych i wybór zmiennych
 - Testy statystyczne zmiennych
@@ -21,8 +25,6 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 - Porównanie modeli
 - Predykcja na zbiorze testowym wraz z konkursem w Kaggle
 
-## Struktura raportów
-- Pierwszy raport jest podzielony według zadań, które dotyczą kolejnych zagadnień
-- Drugi raport dotyczy predykcji wartości zmiennej objaśnianej w zbiorze testowym
+
 
 
