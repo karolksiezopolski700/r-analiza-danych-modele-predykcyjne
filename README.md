@@ -20,7 +20,7 @@ Można je pobrać z Google Drive pod tym linkiem: https://drive.google.com/drive
 - Pierwszy raport jest podzielony według zadań, które dotyczą kolejnych zagadnień
 - Drugi raport dotyczy predykcji wartości zmiennej objaśnianej w zbiorze testowym
 
-## Modele i analiza
+## Co zrobiłem
 - Eksploracja danych i wybór zmiennych
 - Testy statystyczne zmiennych
 - Model ElasticNet z walidacją krzyżową
