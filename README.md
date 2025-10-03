@@ -9,8 +9,6 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 - `X_test.csv` – macierz ekspresji genów dla danych testowych
 - `y_train.csv` – ilość białka powierzchniowego (CD36) dla danych treningowych
 
-> Pliki danych nie są w repozytorium ze względu na rozmiar; można je pobrać z [Kaggle](link-do-konkursu).
-
 ## Struktura repozytorium
 - `notebooks/` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest, predykcji
 - `reports/` – raport PDF z analizą i wnioskami
