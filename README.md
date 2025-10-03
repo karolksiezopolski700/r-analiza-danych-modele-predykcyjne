@@ -12,7 +12,6 @@ Dane pochodzą z eksperymentów scRNA-seq i zawierają:
 ## Struktura repozytorium
 - `kod_zad1-5.Rmd`, `kod_zad6.R` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest, predykcji
 - `raport_zad1-5.html`, `raport_zad6.pdf` – raporty z analizą i wnioskami
-- `data/` – przykładowe pliki danych lub link do zewnętrznego źródła
 
 ## Modele i analiza
 - Eksploracja danych i wybór zmiennych
