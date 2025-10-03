@@ -1,0 +1,474 @@
+---
+title: "projekt"
+output: html_document
+date: "2025-05-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Zad 1. Podstawowe własności danych
+
+**(a)** Wczytanie danych. 
+```{r 1a}
+
+X_train = read.csv("X_train.csv", header = TRUE)
+X_test = read.csv("X_test.csv", header = TRUE)
+y_train = read.csv("y_train.csv", header = TRUE)
+```
+
+Sprawdzenie podstawowych własności danych, takich jak ilość obserwacji oraz zmiennych, typ danych i kompletność danych.
+
+```{r 1a2}
+ncol(X_train)
+nrow(X_train)
+anyNA(X_train)
+str(X_train)
+
+ncol(X_test)
+nrow(X_test)
+anyNA(X_test)
+str(X_test)
+
+ncol(y_train)
+nrow(y_train)
+anyNA(y_train)
+str(y_train)
+
+```
+
+**(b)** Kilka podstawowych statystyk zmiennej objaśnianej i jej rozkład empiryczny.
+
+```{r 1b}
+summary(y_train)
+
+library(ggplot2)
+ggplot(y_train) + geom_histogram(aes(x = CD36), binwidth=1) + 
+  labs(title = "Histogram rozkładu zmiennej objaśnianej CD36", x = "Wartość zmiennej CD36", 
+       y = "Liczba obserwacji")
+
+```
+
+**(c)** Mapa ciepła korelacji
+
+```{r 1c}
+X_train_kor = sapply(X_train, function(x) cor(y_train$CD36,x))
+
+top_kor = names(sort(abs(X_train_kor), decreasing = TRUE))[1:250]
+X_top250 = X_train[, top_kor]
+
+cor_matrix = cor(X_top250)
+
+library(pheatmap)
+pheatmap(cor_matrix, main = "Mapa ciepła korelacji 250 zmiennych objaśniających najbardziej skorelowanych ze zmienną objaśnianą", fontsize = 7)
+```
+
+## Zad 2. Testy statystyczne
+
+**(a)** Wykres kwantylowy porównujący zmienną objaśnianą z rozkładem normalnym
+```{r 2a}
+ggplot(y_train, aes(sample = CD36)) + stat_qq() + stat_qq_line(col = 'red') +
+  labs(title = "Wykres kwantylowy",
+    x = "Kwantyle teoretyczne", y = "Kwantyle empiryczne (CD36)")
+```
+
+Na czerwono zaznaczono prostą wyznaczoną przez kwantyle doświadczalne
+
+**(b)** Test zgodności zmiennej objaśnianej z rozkładem normalnym.
+
+**Hipotezowa zerowa $H_0$:** dane pochodzą z rozkładu normalnego.
+
+**Hipoteza alternatywna $H_1$:** dane nie pochodzą z rozkładu normalnego.
+
+**Poziom istotności:** $\alpha$ = 0.05
+
+**Wybór testu:** Wybrałem test Kołmogorowa, ponieważ dane są rozłożone w sposób ciągły i gęsty, więc wydaje się lepszy od testu $\chi^2$.
+
+```{r 2b}
+ks.test(y_train$CD36, "pnorm", mean = mean(y_train$CD36), sd = sd(y_train$CD36))
+```
+
+**Wnioski:** p-wartość jest bardzo bliska 0, więc z dużym prawdopodobieństwem możemy odrzucić hipotezę, że zmienna pochodzi z rozkładu normalnego.
+
+**(c)**
+
+**i.** Test zgodności zmiennej objaśniającej najbardziej skorelowanej ze zmienną objaśnianą z wybranym rozkładem.
+```{r 2ci}
+top1_kor = names(sort(abs(X_train_kor), decreasing = TRUE))[1]
+X_top1 = X_train[, top1_kor]
+X_top1 = data.frame(X_top1)
+
+ggplot(X_top1) + geom_density(aes(x = X_top1, color = 'Empiryczna gęstość')) + 
+  stat_function(fun = dexp, args = list(rate = 2), aes(color = 'Rozkład wykładniczy z parametrem 2')) +
+  labs(color = "Legenda", x = "Wartości", y = "Gęstość")
+```
+
+Z wykresu wynika, że sensownie będzie porównać zmienną z rozkładem wykładniczym z parametrem 2.
+
+**Hipotezowa zerowa $H_0$:** dane pochodzą z rozkładu wykładniczego z parametrem 2.
+
+**Hipoteza alternatywna $H_1$:** dane nie pochodzą z rozkładu wykładniczego z parametrem 2.
+
+**Poziom istotności:** $\alpha$ = 0.05
+
+**Wybór testu:** Wybrałem test Kołmogorowa, ponieważ dane są rozłożone w sposób ciągły i gęsty, więc wydaje się lepszy od testu $\chi^2$.
+
+```{r 2ci2}
+X_top1 = X_train[, top1_kor]
+ks.test(X_top1, "pexp", rate = 2)
+```
+**Wnioski:** p-wartość jest bardzo bliska 0, więc z dużym prawdopodobieństwem możemy odrzucić hipotezę, że zmienna pochodzi z rozkładu wykładniczego z parametrem 2.
+
+**ii.** Test podobienśtwa rozkładu zmiennej objaśniającej z (i.) w zbiorze testowym i treningowym.
+
+**Wybór testu:** Wybrałem test Wilcoxona, ponieważ można założyć, że rozkład danych jest daleki od rozkładu normalnego (wykres z podpunktu b)i), więc będzie on lepszy od testu t-studenta.
+
+**Hipotezowa zerowa $H_0$:** rozkłady mają tę samą lokalizację (mediany są równe)
+
+**Hipoteza alternatywna $H_1$:** rozkłady mają różne lokalizacje (mediany są różne)
+
+**Poziom istotności:** $\alpha$ = 0.05
+
+```{r 2cii}
+top1_kor = names(sort(abs(X_train_kor), decreasing = TRUE))[1]
+X_train_top1 = X_train[, top1_kor]
+X_test_top1 = X_test[, top1_kor]
+wilcox.test(X_train_top1, X_test_top1)
+```
+
+**Wnioski:** p-wartość jest bliska 1, więc z dużym prawdopodobieństwem można stwierdzić, że hipoteza zerowa jest prawdziwa.
+
+## Zad 3. Trenowanie modelu ElasticNet
+
+**(a)** Podstawowe informacje o modelu ElasticNet.
+
+ElasticNet to model regresji liniowej z regularizacją, który łączy cechy regresji Lasso (L1) i grzbietowej (Ridge, L2). Stosowany jest w celu poprawy uogólniania modelu, szczególnie gdy zmienne są skorelowane lub liczba cech przekracza liczbę obserwacji.
+
+**Estymowane parametry**
+
+Model estymuje:
+- \(\beta_0\) – wyraz wolny (intercept),
+- \(\boldsymbol{\beta} = (\beta_1, \beta_2, ..., \beta_p)\) – współczynniki regresji dla zmiennych wejściowych.
+
+**Optymalizowana funkcja**
+
+ElasticNet minimalizuje funkcję:
+
+\[
+\frac{1}{2n} \sum_{i=1}^n \left(y_i - \beta_0 - \mathbf{x}_i^T \boldsymbol{\beta} \right)^2 + \lambda \left[ (1 - \alpha) \frac{1}{2} ||\boldsymbol{\beta}||_2^2 + \alpha ||\boldsymbol{\beta}||_1 \right]
+\]
+
+gdzie:
+- \(n\) – liczba obserwacji,
+- \(\lambda \geq 0\) – współczynnik regularyzacji (siła kary),
+- \(\alpha \in [0, 1]\) – parametr mieszający, określający udział kar L1 i L2.
+
+**Hiperparametry**
+
+- $\alpha$
+  - \(\alpha = 1\) → czysta **regresja Lasso** (tylko kara L1),
+  - \(\alpha = 0\) → czysta **regresja grzbietowa** (tylko kara L2),
+  - \(0 < \alpha < 1\) → **ElasticNet** (kombinacja L1 i L2).
+
+- $\lambda$ – określa siłę regularizacji: większa wartość prowadzi do prostszego modelu poprzez silniejsze ograniczanie współczynników.
+
+ElasticNet łączy zalety obu metod: eliminuje nieistotne zmienne (jak Lasso) oraz radzi sobie z kolinearnością (jak Ridge).
+
+**(b)** Użycie walidacji krzyżowej do znalezienia odpowiednich hiperparametrów.
+
+```{r 3b}
+library(glmnet)
+library(caret)
+
+X_train_mat = as.matrix(X_train)
+y_train_vec = as.numeric(y_train[, 1])
+
+set.seed(123)
+folds = createFolds(y_train_vec, k = 5, returnTrain = TRUE)
+
+train_control = trainControl(method = "cv", index = folds, savePredictions = "all")
+
+grid = expand.grid(alpha = c(0, 0.5, 1), lambda = c(0.01, 0.1, 1))
+```
+Do walidacji krzyżowej użyłem 5 podzbiorów, ponieważ zbiór danych jest duży, więc to będzie dobry kompromis między dokładnością a czasem.
+```{r 3b2}
+
+set.seed(123)
+model = train(x = X_train_mat, y = y_train_vec, method = "glmnet", tuneGrid = grid,
+              trControl = train_control, metric = "RMSE")
+print(model)
+```
+Używając błędu średniokwadratowego jako miary najlepszymi parametrami są $\alpha$ = `r model$bestTune$alpha` i $\lambda$ = `r model$bestTune$lambda`.
+
+**(c)** Wykresy skrzypcowe dla błędów średniokwadratowych, otrzymanych w poszczególnych foldach testowych walidacji krzyżowej dla danego zestawu wartości hiperparametrów. 
+
+```{r 3c}
+library(dplyr)
+preds = model$pred
+
+preds_to_plot = data.frame(alpha = numeric(), lambda = numeric(), 
+                           Resample = character(), MSE = numeric())
+for (a in c(0, 0.5, 1)) {
+  for (l in c(0.01, 0.1, 1)) {
+    for (r in c('Fold1', 'Fold2', 'Fold3', 'Fold4', 'Fold5')) {
+      
+      temp = preds[preds$alpha == a & preds$lambda == l & preds$Resample == r, ]
+      mse = mean((temp$obs - temp$pred)^2)
+      preds_to_plot = rbind(preds_to_plot, data.frame(alpha = a, lambda = l, Resample = r, MSE = mse))
+    }
+  }
+}
+
+preds_to_plot_001 = preds_to_plot[preds_to_plot$lambda == 0.01,]
+preds_to_plot_01 = preds_to_plot[preds_to_plot$lambda == 0.1,]
+preds_to_plot_1 = preds_to_plot[preds_to_plot$lambda == 1,]
+
+plot001 = ggplot(preds_to_plot_001, aes(x = factor(alpha), y = MSE, fill = factor(alpha))) +
+  geom_violin(trim = FALSE, alpha = 0.5) + geom_point(size = 2) + 
+  labs(title = "lambda = 0.01",x = "alpha", 
+       y = "MSE", fill = "alpha") + theme_minimal()
+
+plot01 = ggplot(preds_to_plot_01, aes(x = factor(alpha), y = MSE, fill = factor(alpha))) +
+  geom_violin(trim = FALSE, alpha = 0.5) + geom_point(size = 2) + 
+  labs(title = "lambda = 0.1",x = "alpha", 
+       y = "MSE", fill = "alpha") + theme_minimal()
+
+plot1 = ggplot(preds_to_plot_1, aes(x = factor(alpha), y = MSE, fill = factor(alpha))) +
+  geom_violin(trim = FALSE, alpha = 0.5) + geom_point(size = 2) + 
+  labs(title = "lambda = 1",x = "alpha", 
+       y = "MSE", fill = "alpha") + theme_minimal()
+```
+
+Wykres porównujący wszystkie wykresy skrzypcowe:
+
+```{r 3cwykres1, fig.width=16, fig.height=9}
+preds_to_plot$al = paste0("α=", preds_to_plot$alpha, ", λ=", preds_to_plot$lambda)
+
+ggplot(preds_to_plot, aes(x = al, y = MSE, fill = al)) +
+  geom_violin(trim = FALSE, alpha = 0.5) + geom_point(size = 1) + 
+  labs(title = 'Rozkład MSE dla różnych wartości hiperparametrów',x = "hiperparametry", 
+       y = "MSE", fill = "") + theme_minimal()
+```
+
+Bardziej czytelne wykresy:
+
+```{r 3cwykres2, fig.width=16, fig.height=9}
+library(patchwork)
+(plot001 | plot01 | plot1) + 
+  plot_annotation(title = "Rozkład MSE w foldach dla różnych wartości hiperparametrów") &
+  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
+
+
+```
+
+**(d)** Błąd treningowy i walidacyjny modelu dla wybranych wartości hiperparametrów.
+
+```{r 3d}
+library(glmnet)
+X_train_mat = as.matrix(X_train)
+y_train_vec = as.numeric(y_train[,1])
+
+calculate_mse = function(fold_name) {
+  pred_fold = model$pred[model$pred$Resample == fold_name & model$pred$alpha == model$bestTune$alpha & 
+                           model$pred$lambda == model$bestTune$lambda, ]
+  test_idx = pred_fold$rowIndex
+  
+  X_train_fold = X_train_mat[-test_idx, ]
+  y_train_fold = y_train_vec[-test_idx]
+  
+  mod = glmnet(X_train_fold, y_train_fold, alpha = model$bestTune$alpha, lambda = model$bestTune$lambda)
+  
+  pred_train = predict(mod, X_train_fold)
+
+  mse = mean((pred_train - y_train_fold)^2)
+  
+  return(mse)
+}
+
+folds1 = paste0("Fold", 1:5)
+
+mse_values = sapply(folds1, calculate_mse)
+
+mean_mse_train = mean(mse_values)
+
+mse_test = (model$results$RMSE[model$results$alpha == model$bestTune$alpha & model$results$lambda == model$bestTune$lambda])^2
+```
+$\alpha$ = `r model$bestTune$alpha`, $\lambda$ = `r model$bestTune$lambda`
+
+Błąd treningowy: `r mean_mse_train`
+
+Błąd walidacyjny: `r mse_test`
+
+## Zad 4. Trenowanie modelu lasów losowych.
+
+**(a)** Użycie walidacji krzyżowej do znalezienia odpowiednich hiperparametrów. Użyto te same foldy co w Zad 3.
+```{r 4a}
+mtry_values = c(10, 20)
+min_node_values = c(10, 20)
+num_trees_values = c(30, 50)
+
+models_list = list()
+results_list = list()
+i = 1
+
+for (ntree in num_trees_values) {
+  grid_rf = expand.grid(mtry = mtry_values, min.node.size = min_node_values, splitrule = c("variance"))
+  
+  set.seed(123)
+  tmp_model = train(x = X_train_mat, y = y_train_vec, method = "ranger", tuneGrid = grid_rf, 
+    trControl = train_control, num.trees = ntree, metric = "RMSE")
+  
+  models_list[[paste0("ntree_", ntree)]] = tmp_model
+  
+  tmp_results = tmp_model$results
+  tmp_results$num.trees = ntree
+  results_list[[i]] = tmp_results
+  i = i + 1
+}
+
+all_results_rf = bind_rows(results_list)
+
+all_results_rf = arrange(all_results_rf, RMSE)
+
+print(models_list)
+
+RMSE30 = models_list[[1]]$results$RMSE[models_list[[1]]$results$mtry == models_list[[1]]$bestTune$mtry & models_list[[1]]$results$min.node.size == models_list[[1]]$bestTune$min.node.size]
+RMSE50 = models_list[[2]]$results$RMSE[models_list[[2]]$results$mtry == models_list[[2]]$bestTune$mtry & models_list[[2]]$results$min.node.size == models_list[[2]]$bestTune$min.node.size]
+
+if(RMSE30 <= RMSE50){
+  bTune = 1
+  Bntree = 30
+}else{
+  bTune = 2
+  Bntree = 50
+}
+
+Bmtry = models_list[[bTune]]$bestTune$mtry
+Bmns = models_list[[bTune]]$bestTune$min.node.size
+```
+Najlepsze parametry to: ntree = `r Bntree`, mtry = `r Bmtry`, min.node.size = `r Bmns`.
+
+**(b)** Wykres pudełkowy dla błędów średniokwadratowych, otrzymanych w poszczególnych foldach testowych walidacji krzyżowej dla danego zestawu wartości hiperparametrów.
+
+```{r 4b, fig.width=16, fig.height=9}
+pred_ntree30 = models_list[[1]]$pred
+pred_ntree50 = models_list[[2]]$pred
+
+rf_preds_to_plot = data.frame(mtry = numeric(), min.node.size = numeric(), ntree = numeric(), 
+                           Resample = character(), MSE = numeric())
+for (mtr in c(10, 20)) {
+  for (mns in c(10, 20)){
+    for (r in c('Fold1', 'Fold2', 'Fold3', 'Fold4', 'Fold5')) {
+      
+      temp = pred_ntree30[pred_ntree30$mtry == mtr & pred_ntree30$min.node.size == mns & pred_ntree30$Resample == r, ]
+      mse = mean((temp$obs - temp$pred)^2)
+      rf_preds_to_plot = rbind(rf_preds_to_plot, data.frame(mtry = mtr, min.node.size = mns, ntree = 30, 
+                                                            Resample = r, MSE = mse))
+    }
+  }
+}
+
+for (mtr in c(10, 20)) {
+  for (mns in c(10, 20)){
+    for (r in c('Fold1', 'Fold2', 'Fold3', 'Fold4', 'Fold5')) {
+      
+      temp = pred_ntree50[pred_ntree50$mtry == mtr & pred_ntree50$min.node.size == mns & pred_ntree50$Resample == r, ]
+      mse = mean((temp$obs - temp$pred)^2)
+      rf_preds_to_plot = rbind(rf_preds_to_plot, data.frame(mtry = mtr, min.node.size = mns, ntree = 50, 
+                                                            Resample = r, MSE = mse))
+    }
+  }
+}
+
+library(ggplot2)
+
+rf_preds_to_plot$param_combo = paste0('mtry=', rf_preds_to_plot$mtry, 
+                                       ', min.node.size=', rf_preds_to_plot$min.node.size)
+
+ggplot(rf_preds_to_plot, aes(x = param_combo, y = MSE, fill = factor(ntree))) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = 'Rozkład MSE dla różnych parametrów Random Forest',
+       x = 'Parametry (mtry, min.node.size)',
+       y = 'MSE',
+       fill = 'Liczba drzew (ntree)') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+**(c)** Błąd treningowy i walidacyjny modelu dla wybranych wartości hiperparametrów.
+```{r 4c}
+library(ranger)
+
+best_model = models_list[[bTune]]
+best_model
+
+calculate_mse_rf = function(fold_name) {
+  pred_fold = best_model$pred[best_model$pred$Resample == fold_name &
+                                best_model$pred$mtry == Bmtry &
+                                best_model$pred$min.node.size == Bmns, ]
+  test_idx = pred_fold$rowIndex
+  
+  X_train_fold = X_train_mat[-test_idx, ]
+  y_train_fold = y_train_vec[-test_idx]
+  
+  mod = ranger(dependent.variable.name = NULL,
+               x = X_train_fold,
+               y = y_train_fold,
+               mtry = Bmtry,
+               min.node.size = Bmns,
+               num.trees = Bntree)
+  
+  pred_train = predict(mod, data = data.frame(X_train_fold))$predictions
+  mse = mean((pred_train - y_train_fold)^2)
+  
+  return(mse)
+}
+
+folds1 = paste0("Fold", 1:5)
+mse_values_rf = sapply(folds1, calculate_mse_rf)
+
+mean_mse_train_rf = mean(mse_values_rf)
+
+mse_test_rf = (best_model$results$RMSE[best_model$results$mtry == Bmtry &
+                                         best_model$results$min.node.size == Bmns])^2
+
+```
+
+ntree = `r Bntree`, mtry = `r Bmtry`, min.node.size = `r Bmns`
+
+Błąd treningowy: `r mean_mse_train_rf`
+
+Błąd walidacyjny: `r mse_test_rf`
+
+## Zad 5. Podsumowanie
+Podsumowanie tabelaryczne wyników modeli ElasticNet, RandomForest i modelu referencyjnego, , który dowolnym wartościom zmiennych objaśniających w foldzie testowym przypisuje średnią arytmetyczną zmiennej objaśnianej policzoną w foldach treningowych.
+```{r 5}
+ref_mse_per_fold_tr = c()
+ref_mse_per_fold_vl = c()
+
+for (fold_name in names(folds)) {
+  train_idx = folds[[fold_name]]
+  test_idx = setdiff(1:length(y_train_vec), train_idx)
+  
+  y_train_fold = y_train_vec[train_idx]
+  mean_y = mean(y_train_fold)
+  
+  y_test = y_train_vec[test_idx]
+  y_pred_vl = rep(mean_y, length(y_test))
+  y_pred_tr = rep(mean_y, length(y_train_fold))
+  
+  mse_vl = mean((y_test - y_pred_vl)^2)
+  mse_tr = mean((y_train_fold - y_pred_tr)^2)
+  
+  ref_mse_per_fold_tr = c(ref_mse_per_fold_tr, mse_tr)
+  ref_mse_per_fold_vl = c(ref_mse_per_fold_vl, mse_vl)
+}
+
+model_avgs = data.frame(Model = c("ElasticNet", "RandomForest", "Referencyjny"),
+                        MSE_treningowy = c(mean_mse_train, mean_mse_train_rf, mean(ref_mse_per_fold_tr)),
+                        MSE_walidacyjny = c(mse_test, mse_test_rf, mean(ref_mse_per_fold_vl)))
+print(model_avgs)
+```
+
+Model ElasticNet osiągnął prawie dwa razy mniejszy błąd walidacyjny niż RandomForest i większy, ale dość zbliżony błąd treningowy. Duża różnica w błędzie walidacyjnym może wynikać z faktu, że w przypadku RandomForest użyłem ograniczoną siatkę hiperparametrów oraz mniejszą liczbę drzew, aby znacząco skrócić czas działania modelu. Chęć uzyskania zadowalającej złożoności czasowej mogła wpłynąć na obniżenie efektywności modelu RandomForest. ElasticNet korzystał z niezależnego od takich ograniczeń doboru parametrów i uzyskał znacząco niższą wartość błędu walidacyjnego, zatem ten model wydaje mi się lepszy.
