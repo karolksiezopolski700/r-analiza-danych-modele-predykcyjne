@@ -15,7 +15,7 @@ Można je pobrać z Google Drive pod tym linkiem: https://drive.google.com/drive
 ## Struktura repozytorium
 - `kod_zad1-5.Rmd` – kod do eksploracji danych, testów statystycznych, modeli ElasticNet i Random Forest
 - `kod_zad6.R` - kod z predykcją wartości zmiennej objaśnianej w zbiorze testowym
-- `raport_zad1-5.html` – raport podzielony według zadań, które dotyczą kolejnych zagadnień
+- `raport_zad1-5.html`, `raport_zad1-5.pdf` – raport podzielony według zadań, które dotyczą kolejnych zagadnień
 - `raport_zad6.pdf`- raport dotyczący predykcji
 
 ## Co zrobiłem
