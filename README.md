@@ -32,5 +32,5 @@ Konkurs Kaggle polegał na uzyskaniu jak najniższego błędu średniokwadratowe
 
 ## Co bym poprawił
 - Uporządkowanie struktury projektu i poprawa estetyki raportu
-- Zastąpienie pętli `for` w Zadaniach 3 i 4 funkcjami wektorowymi lub metodami `apply`, które są bardziej wydajne i typowe w R.
+- Zastąpienie pętli `for` w Zadaniach 3 i 4 funkcjami wektorowymi lub metodami `apply`, które są bardziej wydajne i typowe w R
 
