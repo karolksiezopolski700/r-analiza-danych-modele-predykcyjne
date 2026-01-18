@@ -1,4 +1,4 @@
-# 🇬🇧 ENGLISH
+## English
 
 # scRNA-seq Data Analysis (Student Project)
 
@@ -38,7 +38,7 @@ The Kaggle competition aimed to achieve the lowest possible mean squared error (
 - Better organization of the project structure and improved report aesthetics
 - Replacing `for` loops in Tasks 3 and 4 with vectorized functions or `apply`-based methods, which are more efficient and idiomatic in R
 
-## 🇵🇱 Polski
+## Polski
 
 # Analiza danych scRNA-seq (projekt studencki)
 
