@@ -30,7 +30,7 @@ https://drive.google.com/drive/u/1/folders/1oI1tylOa8qCDE5pjU7WxEVHE9g32aPyS
 - Prediction on the test dataset and participation in a Kaggle competition
 
 ## Kaggle Competition
-The Kaggle competition aimed to achieve the lowest possible mean squared error (MSE) of predictions. It was conducted within laboratory groups. The screenshot shows my result in the Kaggle competition. Data from other participants have been anonymized for privacy reasons.
+The Kaggle competition aimed to achieve the lowest possible mean squared error (MSE) of predictions. It was conducted within laboratory groups. The screenshot shows my result in the Kaggle competition. Data from other participants have been anonymized for privacy reasons. The code and report related to building the predictive model are available in the files `kod_zad6.R` and `raport_zad6.pdf`.
 
 <img width="811" height="598" alt="kaggle" src="https://github.com/user-attachments/assets/837a09cf-40af-483b-87a7-7d6031d3297c" />
 
@@ -69,7 +69,7 @@ Można je pobrać z Google Drive pod tym linkiem: https://drive.google.com/drive
 - Predykcja na zbiorze testowym wraz z konkursem w Kaggle
 
 ## Konkurs Kaggle
-Konkurs Kaggle polegał na uzyskaniu jak najniższego błędu średniokwadratowego predykcji. Odbywał się on w obrębie grup laboratoryjnych. Screenshot przedstawia mój wynik w konkursie Kaggle. Dane innych uczestników zostały zamaskowane ze względów prywatności.
+Konkurs Kaggle polegał na uzyskaniu jak najniższego błędu średniokwadratowego predykcji. Odbywał się on w obrębie grup laboratoryjnych. Screenshot przedstawia mój wynik w konkursie Kaggle. Dane innych uczestników zostały zamaskowane ze względów prywatności. Kod i raport  z tworzenia modelu znajdują się w plikach `kod_zad6.R`, `raport_zad6.pdf`.
 <img width="811" height="598" alt="kaggle" src="https://github.com/user-attachments/assets/837a09cf-40af-483b-87a7-7d6031d3297c" />
 
 ## Co bym poprawił
